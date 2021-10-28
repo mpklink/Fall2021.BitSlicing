@@ -2,6 +2,20 @@
 public class Main {
 
     public static void main(String[] args) {
+
+        //bitSlicing();
+
+        compression();    
+    }
+
+    private static void compression() {
+        var start = new Processor("./in/horse.jpg");
+        start.saveLayer("./out/horse.ppm");
+        var finish = new Processor("./out/horse.ppm");
+        finish.saveLayer("./out/decompressed.png");
+    }
+
+    private static void bitSlicing() {
         var start = new Processor("./in/horse.jpg").grayscale();
         
         for(var i = 1; i < 10; i++){
@@ -30,9 +44,5 @@ public class Main {
         start.applyCurve(ipf)
             .addLayer(Processor.ImageFromFunction(ipf))
             .saveLayers(new int[]{0,1}, "./out/pixel-function.png");
-        
-
-        
-        
     }
 }
