@@ -1,3 +1,4 @@
+package Java;
 import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 import javax.imageio.ImageIO;
@@ -361,9 +362,71 @@ public class IPImage {
       }
     }
     return this;
+  }
 
+  public IPImage bitSlice(int power){
+
+    BufferedImage b = new BufferedImage(this.image.getWidth(), this.image.getHeight(), this.image.getType());
+    for (var h = 0; h < b.getHeight(); h++) {
+      for (var w = 0; w < b.getWidth(); w++) {
+        //Assume we are in grayscale
+        var pixelInt = this.image.getRGB(w, h);
+        int value = new Color(pixelInt).getRed();
+        int slicer = (int)Math.pow(2, power);
+        int sliced = value & slicer;
+        Color finalColor = null;
+        if(sliced > 0){
+          finalColor = Color.WHITE;
+        }
+        else{
+          finalColor = Color.BLACK;
+        }
+
+        b.setRGB(w, h, finalColor.getRGB());
+
+
+      }
+    }
+
+
+
+
+    IPImage toReturn = new IPImage(b);
+    return toReturn;
     
+  }
+  public IPImage bitSlice(int powerLow, int powerHigh){
+    if(powerLow == powerHigh) return this.bitSlice(powerLow);
 
+
+    BufferedImage b = new BufferedImage(this.image.getWidth(), this.image.getHeight(), this.image.getType());
+    for (var h = 0; h < b.getHeight(); h++) {
+      for (var w = 0; w < b.getWidth(); w++) {
+        //Assume we are in grayscale
+        var pixelInt = this.image.getRGB(w, h);
+        int value = new Color(pixelInt).getRed();
+        int slicer = 0;
+        for(int i = powerLow; i <= powerHigh; i++){
+          slicer |= (int)Math.pow(2, i);
+
+        }
+        int sliced = value & slicer;
+        sliced <<=7-powerHigh;
+        Color finalColor = new Color(sliced, sliced, sliced);
+        
+
+        b.setRGB(w, h, finalColor.getRGB());
+
+
+      }
+    }
+
+
+
+
+    IPImage toReturn = new IPImage(b);
+    return toReturn;
+    
   }
 
 }

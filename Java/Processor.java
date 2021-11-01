@@ -1,8 +1,7 @@
+package Java;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.Color;
@@ -18,21 +17,6 @@ public class Processor {
   int canvasHeight;
 
   public Processor(String filename) {
-    if (filename.toLowerCase().endsWith(".ppm")) {
-      try {
-        List<String> lines = Files.readAllLines(Paths.get(filename));
-        
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-
-    } else {
-      readStandardFormat(filename);
-    }
-  }
-
-  private void readStandardFormat(String filename) {
     try {
       BufferedImage bufferedImage = ImageIO.read(new File(filename));
       // layers.add(new ImageLayer(new Image(bufferedImage)));
@@ -136,34 +120,6 @@ public class Processor {
   }
 
   public Processor saveLayer(String string) {
-    if (string.toLowerCase().endsWith(".ppm")) {
-      try {
-        StringBuilder ppm = new StringBuilder();
-        var image = currentLayer().image().image;
-
-        // Magic Number
-        ppm.append("P3\n");
-
-        // Dimensions
-        ppm.append(image.getWidth() + " " + image.getHeight() + "\n");
-
-        // Max byte size
-        ppm.append("255\n");
-
-        // Loop over the pixels and add them to the file
-        for (var h = 0; h < image.getHeight(); h++) {
-          for (var w = 0; w < image.getWidth(); w++) {
-            var pixelInt = image.getRGB(w, h);
-            var color = new Color(pixelInt);
-            ppm.append(color.getRed() + " " + color.getGreen() + " " + color.getBlue() + " ");
-          }
-        }
-        Files.write(Paths.get(string), ppm.toString().getBytes());
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-      return this;
-    }
     currentLayer().image().save(string);
     return this;
   }
@@ -235,7 +191,7 @@ public class Processor {
     Graphics2D g = (Graphics2D) toReturn.getGraphics();
     g.setColor(Color.GRAY);
     g.fillRect(0, 0, width, height);
-    for (int i = 0; i < 256; i++) {
+    for(int i = 0; i < 256; i++){
       g.setColor(new Color(i, i, i));
       g.fillRect(i, 0, 1, height);
     }
@@ -247,39 +203,51 @@ public class Processor {
       float x = i / 255f;
       float output = fun.run(x);
       output = Math.min(1, Math.max(0, output));
-      float y = 1 - output;
-      int j = (int) (y * 255);
-      if (i != 0) {
+      float y = 1-output;
+      int j = (int)(y*255);
+      if(i!=0){
         g.setColor(Color.BLACK);
-        g.drawLine(lastX, lastY, i, j);
+        g.drawLine(lastX, lastY, i,j);
         g.setColor(Color.WHITE);
-        g.drawLine(lastX - 1, lastY - 1, i - 1, j - 1);
+        g.drawLine(lastX-1, lastY-1, i-1,j-1);
       }
-      // g.fillRect(i,j,1,1);
+      //g.fillRect(i,j,1,1);
       lastX = i;
       lastY = j;
 
+
+
     }
     // for (var h = 0; h < height; h++) {
-    // float y = 1 - h / (float) height;
-    // if (y == .1)
-    // System.out.println("here");
-    // for (var w = 0; w < width; w++) {
-    // float x = w / (float) width;
-    // float output = fun.run(x);
-    // output = Math.min(1, Math.max(0, output));
-    // if (Math.abs(y - output) < 2 / (float) height) {
-    // g.setColor(Color.WHITE);
-    // g.fillRect(w, h, 1, 1);
-    // }
+    //   float y = 1 - h / (float) height;
+    //   if (y == .1)
+    //     System.out.println("here");
+    //   for (var w = 0; w < width; w++) {
+    //     float x = w / (float) width;
+    //     float output = fun.run(x);
+    //     output = Math.min(1, Math.max(0, output));
+    //     if (Math.abs(y - output) < 2 / (float) height) {
+    //       g.setColor(Color.WHITE);
+    //       g.fillRect(w, h, 1, 1);
+    //     }
 
-    // }
+    //   }
     // }
 
     g.dispose();
 
     return new IPImage(toReturn);
 
+  }
+
+  public Processor bitSlice(int i) {
+    this.currentLayer().image().bitSlice(i);
+    return this;
+  }
+
+  public Processor setCurrentLayer(int l){
+    this.currentLayer = l;
+    return this;
   }
 
 }
