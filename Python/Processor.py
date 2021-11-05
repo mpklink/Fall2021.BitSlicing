@@ -22,5 +22,39 @@ class Processor:
     def currentLayer(self):
         return self.layers.get(self.currentLayer)
 
+    def push(self):
+        self.layers.add(self.currentLayer().clone())
+        self.resetCurrentLayer()
+        return self
+
+    def resetCurrentLayer(self):
+        self.currentLayer = self.layers.size() - 1
+
+    def popLayer(self):
+        self.layers.remove(self.currentLayer)
+        self.currentLayer -= 1
+        if (self.currentLayer < 0):
+            self.currentLayer = 0
+        return self
+
+    def image(self):
+        return self.currentLayer().image()
+
+    def histogram(self):
+        self.currentLayer().image().histogram()
+        return self
+
+    def histogram(self, i):
+        self.currentLayer().image().histogram(1)
+        return self
+
+    def saveCurrentLayer(self, string):
+        self.saveLayer(string)
+        return self
+
+    def brighten(self, i):
+        self.currentLayer().image().brighten(i)
+        return self
+        
     def addLayer(self, layer):
         return self
