@@ -72,6 +72,33 @@ class IPImage:
         
         self.image = toReturn
         return self
+
+    def translateLinear(self, i, j, b):
+        toReturn = Image.new(mode="RGBA",size=(self.image.size[0], self.image.size[1]))
+        for y in range(toReturn.size[1]):
+            for x in range(toReturn.size[0]):
+                originalX = int(x - i + .5)
+                leftPixel = originalX
+                rightPixel = originalX + 1
+                originalY = int(y - j + .5)
+
+                if originalX < 0 or originalX >= self.image.size[0] or y < 0 or y >= self.image.size[1]:
+                    continue
+
+                pixelLeft = self.px[leftPixel, originalY]
+                pixelRight = self.px[rightPixel, originalY]
+                percent = i - int(i)
+                leftPixelContribution = (int(pixelLeft[0] * (1 - percent)), int(pixelLeft[1] * (1 - percent)), int(pixelLeft[2] * (1 - percent)))
+                rightPixelContribution = (int(pixelRight[0] * (percent)), int(pixelRight[1] * (percent)), int(pixelRight[2] * (percent)))
+                finalRed = leftPixelContribution[0] + rightPixelContribution[0]
+                finalGreen = leftPixelContribution[1] + rightPixelContribution[1]
+                finalBlue = leftPixelContribution[2] + rightPixelContribution[2]
+                finalColor = (finalRed, finalGreen, finalBlue)
+
+                toReturn.putpixel((x, y), finalColor)
         
+        self.image = toReturn
+        return self
+
     def clone(self):
         return copy.deepcopy(self.image)
