@@ -34,11 +34,44 @@ class IPImage:
                 if originalX < 0 or originalX >= width or originalY < 0 or originalY >= height:
                     continue
                 else:
-                    pixel = self.px[originalX,originalY]
-                    toReturn.putpixel((x,y),pixel)
+                    pixel = self.px[originalX, originalY]
+                    toReturn.putpixel((x, y), pixel)
 
         self.image = toReturn
         return self
 
+    def scaleNearestNeighbor(self, scaleX, scaleY):
+        newWidth = int(self.image.size[0] * scaleX)
+        newHeight = int(self.image.size[1] * scaleY)
+        toReturn = Image.new(mode="RGBA",size=(self.image.size[0], self.image.size[1]))
+
+        for y in range(newHeight):
+            for x in range(newWidth):
+                if x >= self.image.size[0] or y >= self.image.size[1]:
+                    continue
+                originalX = int(x / scaleX)
+                originalY = int(y / scaleY)
+                pixel = self.px[originalX, originalY]
+                toReturn.putpixel((x, y), pixel)
+        
+        self.image = toReturn
+        return self
+    
+    def translateNearestNeighbor(self, i, j):
+        toReturn = Image.new(mode="RGBA",size=(self.image.size[0], self.image.size[1]))
+        for y in range(toReturn.size[1]):
+            for x in range(toReturn.size[0]):
+                originalX = int(x - i + .5)
+                originalY = int(y - j + .5)
+
+                if originalX < 0 or originalX >= self.image.size[0] or y < 0 or y >= self.image.size[1]:
+                    continue
+
+                pixelInt = self.px[originalX, originalY]
+                toReturn.putpixel((x, y), pixelInt)
+        
+        self.image = toReturn
+        return self
+        
     def clone(self):
         return copy.deepcopy(self.image)
