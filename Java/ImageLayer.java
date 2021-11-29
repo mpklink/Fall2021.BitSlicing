@@ -1,19 +1,18 @@
-package Java;
 import java.awt.Color;
 
 public class ImageLayer {
-  IPImage image;
+  Layer image;
   float dx = 0;
   float dy = 0;
   float sx = 1;
   float sy = 1;
   float r = 0;
 
-  public ImageLayer(IPImage image){
+  public ImageLayer(Layer image){
     this.image = image;
   }
 
-  public IPImage image(){
+  public Layer image(){
     return this.image;
   }
 

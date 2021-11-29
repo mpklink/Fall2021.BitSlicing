@@ -1,5 +1,4 @@
-package Java;
 public interface IImageFunction {
-  IPImage run(IPImage i);
+  Layer run(Layer i);
   
 }
