@@ -54,7 +54,11 @@ class Processor:
 
     def brighten(self, i):
         self.currentLayer().image().brighten(i)
-        return self
+        return  self
         
+    def addContrast(self, f):
+        self.currentLayer().image().addContrast(f)
+        return self
+
     def addLayer(self, layer):
         return self
