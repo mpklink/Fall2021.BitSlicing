@@ -1,6 +1,6 @@
 package Java;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
@@ -10,7 +10,6 @@ import java.awt.Color;
 
 import javax.imageio.ImageIO;
 
-import org.w3c.dom.html.HTMLAnchorElement;
 
 import java.awt.Graphics2D;
 

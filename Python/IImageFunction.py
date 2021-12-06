@@ -1,4 +1,6 @@
-import IPImage
+from IPImage import *
+from Layer import *
+
 class IImageFunction:
-    def run(self, i) -> IPImage:
+    def run(self, i: Layer) -> IPImage:
         pass
